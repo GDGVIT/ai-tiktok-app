@@ -1,30 +1,53 @@
-import google.generativeai as palm
 import os
 
-# load dotenv
+import google.generativeai as palm
 from dotenv import load_dotenv
 
 load_dotenv()
 
-palm.configure(api_key=os.environ["PALMAPI"])
+
+def configure_palm():
+    """
+    Configures the PALM API with the provided API key from the environment variables.
+    """
+    palm.configure(api_key=os.environ["PALMAPI"])
+
+
+def list_supported_models():
+    """
+    Lists the models that support the "generateText" generation method.
+
+    Returns:
+        list: List of models that support "generateText".
+    """
+    return [
+        model
+        for model in palm.list_models()
+        if "generateText" in model.supported_generation_methods
+    ]
+
 
 def generate_text(prompt):
-    
-    models = [
-        m
-        for m in palm.list_models()
-        if "generateText" in m.supported_generation_methods
-    ]
-    model = models[0].name
+    """
+    Generates text using the selected model based on the given prompt.
+
+    Args:
+        prompt (str): The prompt for text generation.
+
+    Returns:
+        dict: A dictionary containing the generated text in the 'output' key if successful.
+              If an error occurs, the dictionary contains an 'error' key.
+    """
     try:
-        # return palm.generate_text(model=model, prompt=prompt).result
-        # Return the generated text as a dictionary with output as key
-        return {
-            "output": palm.generate_text(model=model, prompt=prompt).result,
-        }
+        models = list_supported_models()
+        if models:
+            selected_model = models[0].name
+            generated_text = palm.generate_text(
+                model=selected_model, prompt=prompt
+            ).result
+            return {"output": generated_text}
+        else:
+            return {"error": "No supported models found"}
     except Exception as e:
         print(e)
         return {"error": "Error generating text"}
-
-
-# print(generate_text("Write a long paragraph voiceover about " + "Cats"))
