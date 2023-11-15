@@ -1,8 +1,6 @@
-import os
-
 import google.generativeai as palm
 from dotenv import load_dotenv
-
+import os
 load_dotenv()
 
 
@@ -38,6 +36,7 @@ def generate_text(prompt):
         dict: A dictionary containing the generated text in the 'output' key if successful.
               If an error occurs, the dictionary contains an 'error' key.
     """
+    configure_palm()
     try:
         models = list_supported_models()
         if models:
@@ -45,9 +44,12 @@ def generate_text(prompt):
             generated_text = palm.generate_text(
                 model=selected_model, prompt=prompt
             ).result
-            return {"output": generated_text}
+            return generated_text
         else:
             return {"error": "No supported models found"}
-    except Exception as e:
+    except EOFError as e:
         print(e)
         return {"error": "Error generating text"}
+
+
+# print(generate_text("Write a long paragraph voiceover about cats"))
