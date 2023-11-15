@@ -1,0 +1,17 @@
+OK so I have a bunch of stuff to do rn
+- [x] Write a file server for the images
+- [x] Write a proper function for image retrieval from the API
+- [x] Write the script for the movie generation
+- [ ] Write endpoints for clean up
+- [ ] Write endpoints for movie generation
+- [ ] Figure out how to serve the movie file to user through the API
+- [ ] Fix the text.txt part
+- [ ] Make the stuff more production ready
+- [ ] Finish the django part 
+- [ ] Refactor the code to make it more readable
+- [ ] LINTING
+- [ ] Write proper docs 
+- [ ] Write tests
+- [ ] Dockerize the app
+- [ ] Deploy the app
+- [ ] Documentation for the API
