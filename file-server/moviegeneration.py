@@ -57,5 +57,5 @@ def create_video(image_folder, audio_file, output_file):
     output_video_file = output_file.replace('.mp4', '_with_audio.mp4')
     video_clip.write_videofile(output_video_file, codec='libx264', audio_codec='aac')
 
-resize_images("file-server/static/images", 1080)
-create_video("file-server/static/images", "file-server/static/audio/output_voiceover.mp3","file-server/static/movie/output_video.mp4")
+# resize_images("file-server/static/images", 1080)
+# create_video("./stati", "file-server/static/audio/output_voiceover.mp3","file-server/static/movie/output_video.mp4")
