@@ -8,11 +8,12 @@
 # Path: file-server/app.py
 import os
 import json
+from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import requests
-from dotenv import load_dotenv
-import asyncio
+from imgget import *
+import voiceovergen as vo
+import moviegeneration as mg
 
 load_dotenv()
 
@@ -21,81 +22,16 @@ app = Flask(__name__)
 CORS(app)
 
 
-import requests
-
-async def search_images(api_key, keywords, per_page=1):
-    """
-    Search for images based on keywords using the Pexels API.
-
-    Parameters:
-    - api_key (str): Pexels API key for authorization.
-    - keywords (list): List of keywords for image search.
-    - per_page (int): Number of images per page.
-
-    Returns:
-    - list: List of image URLs.
-    """
-    url = "https://api.pexels.com/v1/search"
-    headers = {
-        "Authorization": api_key,
-    }
-
-    image_urls = []
-
-    for keyword in keywords:
-        params = {
-            "query": keyword,
-            "per_page": per_page,
-        }
-
-        response = requests.get(url, headers=headers, params=params)
-
-        if response.status_code == 200:
-            data = response.json()
-            photos = data.get("photos", [])
-
-            if not photos:
-                print(f"No photos found for keyword: {keyword}")
-            else:
-                # Get the first photo's original image URL for each keyword
-                image_urls.append(photos[0]["src"]["original"])
-
-        else:
-            print(f"Error for keyword {keyword}: {response.status_code}")
-
-    return image_urls
+@app.route("/text", methods=["POST"])
+async def text():
+    """Send prompt to palm 2 API, get text. Use keywords to get images."""
+    pass
 
 
-
-async def download_images(url_list, out_dir):
-    """
-    Download images from a list of URLs and save them to the specified directory.
-
-    Parameters:
-    - url_list (list): List of image URLs to download.
-    - out_dir (str): Output directory to save the downloaded images.
-
-    Returns:
-    - None
-    """
-    # Create the output directory if it doesn't exist
-    os.makedirs(out_dir, exist_ok=True)
-
-    for url in url_list:
-        response = requests.get(url)
-
-        if response.status_code == 200:
-            # Get the file name from the URL
-            filename = os.path.join(out_dir, os.path.basename(url))
-
-            # Save the image to the specified output directory
-            with open(filename, "wb") as f:
-                f.write(response.content)
-            print(f"Image downloaded: {filename}")
-        else:
-            print(
-                f"Failed to download image from {url}. Status code: {response.status_code}"
-            )
+@app.route("/edittext", methods=["POST"])
+async def edittext():
+    """User sends back the edited text, converted to voiceover and movie."""
+    pass
 
 
 @app.route("/images", methods=["POST", "GET"])
@@ -112,37 +48,13 @@ async def images():
         await download_images(img_urls, "static/images")
 
         images = os.listdir("static/images")
-        # Convert images to URLs
-        images_urls = [f"http://localhost:{PORT}/static/images/{image}" for image in images]
-        return jsonify({"image_urls": images_urls})
+        image_urls = [f"http://localhost:{PORT}/static/images/{image}" for image in images]
+        return jsonify({"image_urls": image_urls})
     else:
-        # Return a list of image URLs from static/images
         images = os.listdir("static/images")
-        # Convert images to URLs
-        images_urls = [f"http://localhost:{PORT}/static/images/{image}" for image in images]
-        return jsonify({"image_urls": images_urls})
+        image_urls = [f"http://localhost:{PORT}/static/images/{image}" for image in images]
+        return jsonify({"image_urls": image_urls})
 
-# Routes for voiceover generation
-from gtts import gTTS
-import os
-
-
-async def generate_voiceover(text, output_file="output_voiceover.mp3"):
-    """
-    Generate a voiceover from text and save it as an audio file.
-
-    Args:
-        text (str): The text to convert to speech.
-        output_file (str): The name of the output audio file (default: "output_voiceover.mp3").
-    """
-    # Initialize the TTS object
-    tts = gTTS(text)
-
-    # Save the speech as an audio file
-    tts.save(output_file)
-
-    # Play the generated audio (optional)
-    os.system(f"mpg321 {output_file}")  # You can use other audio players if needed
 
 @app.route("/voiceover", methods=["POST"])
 async def voiceover():
@@ -154,16 +66,40 @@ async def voiceover():
         json_data = json.loads(request.data.decode("utf-8"))
         text = json_data["text"]
 
-        # Generate the voiceover
-        await generate_voiceover(text, "file-server/static/audio/output_voiceover.mp3")
+        if not os.path.exists("file-server/static/audio/output_voiceover.mp3"):
+            await vo.generate_voiceover(text, "file-server/static/audio/output_voiceover.mp3")
 
-        # Return the URL of the voiceover
         return jsonify({"voiceover_url": f"http://localhost:{PORT}/static/audio/output_voiceover.mp3"})
 
-# Routes for movie generation
+
+@app.route("/movie", methods=["POST"])
+async def movie():
+    """
+    Takes in a list of image URLs and a voiceover URL and generates a movie and returns the URL of the movie
+    (from local storage) that's downloadable.
+    """
+    if request.method == "POST":
+        image_folder = "file-server/static/images"
+        audio_file = "file-server/static/audio/output_voiceover.mp3"
+
+        await mg.create_video(image_folder, audio_file, "file-server/static/movie/output_movie.mp4")
+
+        return jsonify({"movie_url": f"http://localhost:{PORT}/static/movie/output_movie.mp4"})
+
+# /reset = deletes all files in static/images, static/audio, static/movie
+@app.route("/reset", methods=["POST"])
+async def reset():
+    """
+    Deletes all files in static/images, static/audio, static/movie.
+    """
+    if request.method == "POST":
+        # recursively go through all files in static and delete only the files
+        for root, dirs, files in os.walk("./static"):
+            for file in files:
+                os.remove(os.path.join(root, file))
 
 
-# First we have to generate the movie
+        return jsonify({"message": "All files deleted."})
 
 if __name__ == "__main__":
     app.run(debug=True)
