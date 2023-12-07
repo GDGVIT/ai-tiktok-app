@@ -1,6 +1,6 @@
 import requests
 import os
-async def search_images(api_key, keywords, per_page=1):
+def search_images(api_key, keywords, per_page=1):
     """
     Search for images based on keywords using the Pexels API.
 
@@ -43,8 +43,7 @@ async def search_images(api_key, keywords, per_page=1):
     return image_urls
 
 
-
-async def download_images(url_list, out_dir):
+def download_images(url_list, out_dir):
     """
     Download images from a list of URLs and save them to the specified directory.
 
