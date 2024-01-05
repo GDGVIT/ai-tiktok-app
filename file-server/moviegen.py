@@ -1,6 +1,7 @@
 import os
-from PIL import Image
 from moviepy.editor import AudioFileClip, ImageSequenceClip, concatenate_videoclips
+from PIL import Image
+
 
 def resize_images(folder_path):
     """
@@ -18,7 +19,11 @@ def resize_images(folder_path):
     files = os.listdir(folder_path)
 
     # Filter only image files
-    image_files = [file for file in files if file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp'))]
+    image_files = [
+        file
+        for file in files
+        if file.lower().endswith((".png", ".jpg", ".jpeg", ".gif", ".bmp"))
+    ]
 
     # Resize and overwrite each image
     for image_file in image_files:
@@ -30,7 +35,7 @@ def resize_images(folder_path):
             new_width = int(img.height * (9 / 16))
 
             # Resize the image to the new dimensions
-            resized_img = img.resize((new_width, img.height), Image.ANTIALIAS)
+            resized_img = img.resize((new_width, img.height))
 
             # Overwrite the original image
             resized_img.save(image_path)
@@ -38,19 +43,33 @@ def resize_images(folder_path):
     return folder_path
 
 
-def create_video(audio_file, image_folder='file-server/static/images', output_file="file-server/static/movie/output_video.mp4"):
-    # img_folder = resize_images(image_folder)
-    image_files = [os.path.join(image_folder, img) for img in sorted(os.listdir(image_folder))]
+def create_video(
+    audio_file,
+    image_folder,
+    output_file,
+):
+    img_folder = resize_images(image_folder)
+    image_files = [
+        os.path.join(image_folder, img) for img in sorted(os.listdir(image_folder))
+    ]
     audio_clip = AudioFileClip(audio_file)
     audio_duration = audio_clip.duration
     num_images = len(image_files)
     duration_per_image = audio_duration / num_images
-    image_clips = [ImageSequenceClip([image_file], fps=1 / duration_per_image) for image_file in image_files]
+    image_clips = [
+        ImageSequenceClip([image_file], fps=1 / duration_per_image)
+        for image_file in image_files
+    ]
     video_clip = concatenate_videoclips(image_clips, method="compose")
     video_clip = video_clip.set_duration(audio_duration)
-    video_clip = video_clip.resize(width=900, height=1600)
+    # video_clip = video_clip.resize(width=900, height=1600)
     video_clip = video_clip.set_audio(audio_clip)
-    output_video_file = output_file.replace('.mp4', '_with_audio.mp4')
-    video_clip.write_videofile(output_video_file, codec='libx264', audio_codec='aac', threads=4, preset='ultrafast')
+    output_video_file = output_file.replace(".mp4", ".mp4")
+    video_clip.write_videofile(
+        output_video_file,
+        codec="libx264",
+        audio_codec="aac",
+        threads=4,
+        preset="ultrafast",
+    )
     return output_video_file
-

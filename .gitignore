@@ -1,4 +1,7 @@
-.env
 venv
 server/server/db.sqlite3
 __pycache__
+.github
+./.hooks
+.mypy_cache
+.env
