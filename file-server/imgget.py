@@ -1,5 +1,7 @@
 import requests
 import os
+
+
 def search_images(api_key, keywords, per_page=1):
     """
     Search for images based on keywords using the Pexels API.

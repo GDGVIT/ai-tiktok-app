@@ -1,6 +1,10 @@
 from gtts import gTTS
 import os
-def generate_voiceover(text, output_file="file-server/static/audio/output_voiceover.mp3"):
+
+
+def generate_voiceover(
+    text, output_file="file-server/static/audio/output_voiceover.mp3"
+):
     """
     Generate a voiceover from text and save it as an audio file.
 

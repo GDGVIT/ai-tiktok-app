@@ -1,6 +1,7 @@
 import google.generativeai as palm
 from dotenv import load_dotenv
 import os
+
 load_dotenv()
 
 
@@ -52,4 +53,4 @@ def generate_text(prompt):
         return {"error": "Error generating text"}
 
 
-# print(generate_text("Write a long paragraph voiceover about cats"))
+print(generate_text("Write a long paragraph voiceover about cats"))
