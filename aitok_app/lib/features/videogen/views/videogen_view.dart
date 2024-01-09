@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class VideoGenView extends StatefulWidget {
-  static String routeName = '/home-screen';
+  static String routeName = '/videogen-screen';
   const VideoGenView({super.key});
 
   @override
