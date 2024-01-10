@@ -9,8 +9,11 @@ ADD . /app
 # Install any needed packages specified in requirements.txt
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-# Make port 5000 available to the world outside this container
-EXPOSE 5000
+# Set the environment variable for the port
+ENV PORT=5000
+
+# Expose the port specified in the environment variable
+EXPOSE $PORT
 
 # Run app.py when the container launches
 CMD ["python", "app.py"]

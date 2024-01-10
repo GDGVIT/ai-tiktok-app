@@ -51,6 +51,3 @@ def generate_text(prompt):
     except EOFError as e:
         print(e)
         return {"error": "Error generating text"}
-
-
-print(generate_text("Write a long paragraph voiceover about cats"))
