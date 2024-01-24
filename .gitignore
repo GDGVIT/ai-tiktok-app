@@ -5,3 +5,4 @@ __pycache__
 ./.hooks
 .mypy_cache
 .env
+src/static/*

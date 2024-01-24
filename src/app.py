@@ -16,6 +16,9 @@ app = Flask(__name__)
 CORS(app)
 PALM_API_KEY = os.environ["PALMAPI"]
 
+@app.route("/", methods=["GET"])
+def home():
+    return "Hi"
 
 @app.route("/text", methods=["POST"])
 def text():
@@ -37,8 +40,7 @@ def text():
     download_images(img_urls, f"static/{user_id}/images")
     imgs = os.listdir(f"./static/{user_id}/images")
     txt = llm.generate_text(
-        "Write a 1 minute info speech in plaintext for :" + txtr
-    )
+        "Write a 1 minute info speech in plaintext for :" + txtr + "\n Only text, no links. Keep the language simple"    )
     return jsonify(
         {
             "user_id": user_id,
@@ -47,6 +49,7 @@ def text():
         }
     )
 
+# curl -X POST -H "Content-Type: application/json" -d '{"keywords": ["cat", "dog"], "text": "cats and dogs"}' http://localhost:5000/text
 
 @app.route("/edittext", methods=["POST"])
 def edittext():
@@ -77,6 +80,7 @@ def edittext():
         {"video_url": f"/static/{user_id}/movie/output_video_with_audio.mp4"}
     )
 
+# curl -X POST -H "Content-Type: application/json" -d '{"text": "cats and dogs", "user_id": "test"}' http://localhost:5000/edittext
 
 @app.route("/images", methods=["POST"])
 def images():
@@ -127,12 +131,12 @@ def movie():
     json_data = json.loads(request.data.decode("utf-8"))
     user_id = json_data["user_id"]
     if os.path.exists(
-        f"file-server/static/{user_id}/movie/output_video_with_audio.mp4"
+        f"./static/{user_id}/movie/output_video_with_audio.mp4"
     ):
         return jsonify(
             {
                 "user_id": user_id,
-                "video_url": f"/static/{user_id}/movie/output_video_with_audio.mp4",
+                "video_url": f"./static/{user_id}/movie/output_video_with_audio.mp4",
             }
         )
     else:
