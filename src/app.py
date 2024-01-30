@@ -30,19 +30,21 @@ def text():
     data = json.loads(request.data.decode("utf-8"))
 
     # Use dict.get() to check for missing keys
-    keywords = data.get("keywords")
-    if keywords is None:
-        return jsonify({"error": "Missing keywords in request"}), 400
+
 
     txtr = data.get("text")
     if text is None:
         return jsonify({"error": "Missing text in request"}), 400
 
-    img_urls = search_images(os.environ["PEXELSAPI"], keywords)
-    download_images(img_urls, f"static/{user_id}/images")
+
     imgs = os.listdir(f"./static/{user_id}/images")
     txt = llm.generate_text(
         "Write a 1 minute info speech in plaintext for :" + txtr + "\n Only text, no links. Keep the language simple")
+    
+    keywords = llm.generate_text("Get a lot of comma separated keywords from the given text (don't add any additional text, only the comma separated values): " + txtr)
+    keywords = keywords.split(',')  
+    img_urls = search_images(os.environ["PEXELSAPI"], keywords)
+    download_images(img_urls, f"static/{user_id}/images")
     return jsonify(
         {
             "user_id": user_id,
