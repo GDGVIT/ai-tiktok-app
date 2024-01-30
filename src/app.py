@@ -41,7 +41,7 @@ def text():
     txt = llm.generate_text(
         "Write a 1 minute info speech in plaintext for :" + txtr + "\n Only text, no links. Keep the language simple")
     
-    keywords = llm.generate_text("Get a lot of comma separated keywords from the given text (don't add any additional text, only the comma separated values): " + txtr)
+    keywords = llm.generate_text("Get a lot of comma separated keywords from the given text (don't add any additional text, only the comma separated values): " + txt)
     keywords = keywords.split(',')  
     img_urls = search_images(os.environ["PEXELSAPI"], keywords)
     download_images(img_urls, f"static/{user_id}/images")
@@ -78,7 +78,7 @@ def edittext():
     )
     mg.create_video(
         vo_url,
-        image_folder=f"./static/{user_id}/images",
+        image_folder_path=f"./static/{user_id}/images",
         output_file=f"./static/{user_id}/movie/output_video_with_audio.mp4",
     )
     return jsonify(

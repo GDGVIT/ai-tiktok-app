@@ -1,56 +1,43 @@
 import os
 from moviepy.editor import AudioFileClip, ImageSequenceClip, concatenate_videoclips
 from PIL import Image
+import concurrent.futures
+from functools import partial
+import multiprocessing
 
+def resize_image_parallel(image_path):
+    with Image.open(image_path) as img:
+        new_width = int(img.height * (9 / 16))
+        resized_img = img.resize((new_width, img.height))
+        resized_img.save(image_path)
 
 def resize_images(folder_path):
-    """
-    Resize all images in the given folder to a 16:9 portrait ratio and overwrite them.
-
-    Parameters:
-    - folder_path (str): The path to the folder containing the images.
-    """
-    # Ensure the folder path is valid
     if not os.path.isdir(folder_path):
         print(f"Error: {folder_path} is not a valid directory.")
         return
 
-    # Get a list of all files in the folder
     files = os.listdir(folder_path)
-
-    # Filter only image files
     image_files = [
-        file
+        os.path.join(folder_path, file)
         for file in files
         if file.lower().endswith((".png", ".jpg", ".jpeg", ".gif", ".bmp"))
     ]
 
-    # Resize and overwrite each image
-    for image_file in image_files:
-        image_path = os.path.join(folder_path, image_file)
-
-        # Open the image
-        with Image.open(image_path) as img:
-            # Calculate the new width based on a 16:9 ratio
-            new_width = int(img.height * (9 / 16))
-
-            # Resize the image to the new dimensions
-            resized_img = img.resize((new_width, img.height))
-
-            # Overwrite the original image
-            resized_img.save(image_path)
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        executor.map(resize_image_parallel, image_files)
 
     return folder_path
 
 
+
 def create_video(
     audio_file,
-    image_folder,
+    image_folder_path,  # Change the parameter name here
     output_file,
 ):
-    img_folder = resize_images(image_folder)
+    img_folder = resize_images(image_folder_path)  # Change the argument here
     image_files = [
-        os.path.join(image_folder, img) for img in sorted(os.listdir(image_folder))
+        os.path.join(image_folder_path, img) for img in sorted(os.listdir(image_folder_path))
     ]
     audio_clip = AudioFileClip(audio_file)
     audio_duration = audio_clip.duration
@@ -73,3 +60,4 @@ def create_video(
         preset="ultrafast",
     )
     return output_video_file
+
