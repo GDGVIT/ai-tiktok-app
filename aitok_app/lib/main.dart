@@ -1,9 +1,16 @@
+import 'package:aitok/features/videogen/bloc/video_generator_bloc.dart';
 import 'package:aitok/features/videogen/views/videogen_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'core/service_locator.dart';
 import 'features/home/views/homepage_view.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  //dependency Injection
+  await setupLocator();
   runApp(const MyApp());
 }
 
@@ -12,18 +19,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return BlocProvider(
+      create: (context) => VideoGeneratorBloc(),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        // home: const MyHomePage(),
+        initialRoute: MyHomePage.routeName,
+        routes: {
+          MyHomePage.routeName: (ctx) => const MyHomePage(),
+          VideoGenView.routeName: (ctx) => const VideoGenView(),
+        },
       ),
-      // home: const MyHomePage(),
-      initialRoute: MyHomePage.routeName,
-      routes: {
-        MyHomePage.routeName: (ctx) => const MyHomePage(),
-        VideoGenView.routeName: (ctx) => const VideoGenView(),
-      },
     );
   }
 }

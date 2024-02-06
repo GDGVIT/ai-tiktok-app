@@ -1,7 +1,10 @@
 import 'package:aitok/core/assets.dart';
-import 'package:aitok/features/videogen/views/videogen_view.dart';
+import 'package:aitok/core/network_config.dart';
+import 'package:aitok/core/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../videogen/views/videogen_view.dart';
 
 class MyHomePage extends StatefulWidget {
   static String routeName = '/home-screen';
@@ -12,6 +15,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final NetworkConfig _networkConfig = locator<NetworkConfig>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,6 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               onTap: () => Navigator.pushNamed(context, VideoGenView.routeName),
+              // onTap: () => makeReq(),
             ),
             const SizedBox(
               height: 100,
