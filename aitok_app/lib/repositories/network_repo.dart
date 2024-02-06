@@ -27,7 +27,7 @@ class NetworkRepo implements NetworkRepoInterface {
   Future<String> getVideoResponse(String text, String userId) async {
     final body = {"text": text, "user_id": userId};
     try {
-      final response = await networkProvider.postRequest("/text", body);
+      final response = await networkProvider.postRequest("/edittext", body);
       if (response.statusCode == 200) {
         return response.data["videoUrl"];
       } else {

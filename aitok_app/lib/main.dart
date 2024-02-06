@@ -1,4 +1,5 @@
 import 'package:aitok/features/videogen/bloc/video_generator_bloc.dart';
+import 'package:aitok/features/videogen/views/download_video_view.dart';
 import 'package:aitok/features/videogen/views/videogen_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
         routes: {
           MyHomePage.routeName: (ctx) => const MyHomePage(),
           VideoGenView.routeName: (ctx) => const VideoGenView(),
+          DownloadVideoView.routeName: (ctx) => const DownloadVideoView(),
         },
       ),
     );

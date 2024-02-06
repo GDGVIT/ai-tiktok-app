@@ -1,4 +1,5 @@
 import 'package:aitok/features/videogen/bloc/video_generator_bloc.dart';
+import 'package:aitok/features/videogen/views/download_video_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -23,8 +24,15 @@ class _VideoGenViewState extends State<VideoGenView> {
                 state.mgs ?? "Something went wrong!",
               ),
               backgroundColor: Colors.redAccent,
+              behavior: SnackBarBehavior.floating,
             ),
           );
+        } else if (state is TextResponseLoaded) {
+          setState(() {
+            scriptController.text = state.response.text;
+          });
+        } else if (state is VideoResponseLoaded) {
+          Navigator.pushNamed(context, DownloadVideoView.routeName);
         }
       },
       builder: (context, state) {
@@ -90,7 +98,20 @@ class _VideoGenViewState extends State<VideoGenView> {
                         ),
                       ),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      if (state is VideoGeneratorInitial) {
+                        BlocProvider.of<VideoGeneratorBloc>(context).add(
+                          GetTextEvent(scriptController.text),
+                        );
+                      } else if (state is TextResponseLoaded) {
+                        BlocProvider.of<VideoGeneratorBloc>(context).add(
+                          GetVideoEvent(
+                            text: state.response.text,
+                            userId: state.response.userId,
+                          ),
+                        );
+                      }
+                    },
                   ),
                   const SizedBox(
                     height: 10,

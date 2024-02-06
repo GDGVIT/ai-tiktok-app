@@ -11,6 +11,8 @@ part 'video_generator_state.dart';
 class VideoGeneratorBloc
     extends Bloc<VideoGeneratorEvent, VideoGeneratorState> {
   final remoteRepo = locator<NetworkRepoInterface>();
+  String? videoUrl;
+
   VideoGeneratorBloc() : super(VideoGeneratorInitial()) {
     on<GetTextEvent>((event, emit) async {
       emit(VideoGeneratorLoading());
@@ -29,6 +31,7 @@ class VideoGeneratorBloc
         emit(VideoGeneratorLoading());
         final response =
             await remoteRepo.getVideoResponse(event.text, event.userId);
+        videoUrl = response;
         emit(VideoResponseLoaded(response));
       } catch (e) {
         emit(const VideoGeneratorError(mgs: "Something went wrong!"));
