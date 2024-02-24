@@ -1,3 +1,4 @@
+import 'package:aitok/features/videogen/views/download_video_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -31,6 +32,7 @@ class _TimerPageState extends State<TimerPage> {
             context.read<FetchBloc>().add(StartFetching(videoUrl!));
           } else if (state is FetchSuccess) {
             debugPrint("Timer Finished");
+            Navigator.pushNamed(context, DownloadVideoView.routeName);
             // Implement your navigation logic to a different page here
             // For example: Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AnotherPage()));
           }
