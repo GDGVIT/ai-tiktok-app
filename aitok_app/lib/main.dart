@@ -1,3 +1,6 @@
+import 'package:aitok/features/videofetch/bloc/fetch_bloc.dart';
+import 'package:aitok/features/videofetch/bloc/timer_bloc.dart';
+import 'package:aitok/features/videofetch/views/timer_page_view.dart';
 import 'package:aitok/features/videogen/bloc/video_generator_bloc.dart';
 import 'package:aitok/features/videogen/views/download_video_view.dart';
 import 'package:aitok/features/videogen/views/videogen_view.dart';
@@ -34,6 +37,17 @@ class MyApp extends StatelessWidget {
           MyHomePage.routeName: (ctx) => const MyHomePage(),
           VideoGenView.routeName: (ctx) => const VideoGenView(),
           DownloadVideoView.routeName: (ctx) => const DownloadVideoView(),
+          TimerPage.routeName: (ctx) => MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create: (context) => TimerBloc(),
+                  ),
+                  BlocProvider(
+                    create: (context) => FetchBloc(),
+                  ),
+                ],
+                child: TimerPage(),
+              ),
         },
       ),
     );

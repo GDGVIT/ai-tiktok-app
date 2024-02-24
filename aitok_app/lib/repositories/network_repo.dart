@@ -37,4 +37,18 @@ class NetworkRepo implements NetworkRepoInterface {
       throw Exception("Something went wrong!");
     }
   }
+
+  @override
+  Future<bool> fetchVideoUrl(String url) async {
+    try {
+      final response = await networkProvider.getRequest('/$url');
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        throw Exception("Failed to get text");
+      }
+    } catch (e) {
+      throw Exception("Something went wrong!");
+    }
+  }
 }

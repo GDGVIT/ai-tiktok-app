@@ -1,7 +1,8 @@
 import 'package:aitok/features/videogen/bloc/video_generator_bloc.dart';
-import 'package:aitok/features/videogen/views/download_video_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../videofetch/views/timer_page_view.dart';
 
 class VideoGenView extends StatefulWidget {
   static String routeName = '/videogen-screen';
@@ -32,7 +33,11 @@ class _VideoGenViewState extends State<VideoGenView> {
             scriptController.text = state.response.text;
           });
         } else if (state is VideoResponseLoaded) {
-          Navigator.pushNamed(context, DownloadVideoView.routeName);
+          Navigator.pushNamed(
+            context,
+            TimerPage.routeName,
+            arguments: state.url,
+          );
         }
       },
       builder: (context, state) {
