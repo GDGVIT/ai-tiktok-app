@@ -22,21 +22,36 @@ class _TimerPageState extends State<TimerPage> {
   Widget build(BuildContext context) {
     videoUrl = ModalRoute.of(context)?.settings.arguments as String;
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text("Timer Page"),
+        backgroundColor: Colors.black,
+        title: const Text(
+          "Timer Page",
+          style: TextStyle(color: Colors.white),
+        ),
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+          ),
+        ),
       ),
-      body: BlocBuilder<FetchBloc, FetchState>(
+      body: BlocConsumer<FetchBloc, FetchState>(
         builder: (context, state) {
           debugPrint(state.toString());
           if (state is FetchInitial) {
             context.read<FetchBloc>().add(StartFetching(videoUrl!));
-          } else if (state is FetchSuccess) {
+          }
+          return CountdownWidget();
+        },
+        listener: (BuildContext context, FetchState state) {
+          if (state is FetchSuccess) {
             debugPrint("Timer Finished");
             Navigator.pushNamed(context, DownloadVideoView.routeName);
             // Implement your navigation logic to a different page here
             // For example: Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AnotherPage()));
           }
-          return CountdownWidget();
         },
       ),
     );

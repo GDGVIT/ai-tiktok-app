@@ -33,9 +33,20 @@ class _CountdownWidgetState extends State<CountdownWidget> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(
-        '${_secondsRemaining ~/ 60}:${(_secondsRemaining % 60).toString().padLeft(2, '0')}',
-        style: TextStyle(fontSize: 36),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text(
+            "Please Wait, we're making your video",
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          Text(
+            '${_secondsRemaining ~/ 60}:${(_secondsRemaining % 60).toString().padLeft(2, '0')}',
+            style: const TextStyle(fontSize: 36, color: Colors.white),
+          ),
+        ],
       ),
     );
   }

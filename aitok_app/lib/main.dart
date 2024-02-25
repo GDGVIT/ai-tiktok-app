@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
         ),
         // home: const MyHomePage(),
         initialRoute: MyHomePage.routeName,
+        // initialRoute: DownloadVideoView.routeName,
         routes: {
           MyHomePage.routeName: (ctx) => const MyHomePage(),
           VideoGenView.routeName: (ctx) => const VideoGenView(),

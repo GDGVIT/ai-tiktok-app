@@ -42,8 +42,27 @@ class _VideoGenViewState extends State<VideoGenView> {
       },
       builder: (context, state) {
         if (state is VideoGeneratorLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
+          return const Scaffold(
+            backgroundColor: Colors.black,
+            body: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Connecting to server ..... ",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  )
+                ],
+              ),
+            ),
           );
         }
         return Scaffold(

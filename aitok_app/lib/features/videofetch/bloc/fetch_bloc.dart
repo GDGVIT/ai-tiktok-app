@@ -17,6 +17,7 @@ class FetchBloc extends Bloc<FetchEvent, FetchState> {
 
   FetchBloc() : super(FetchInitial()) {
     on<StartFetching>((event, emit) async {
+      _fetchData(event.url);
       _timer =
           Timer.periodic(Duration(seconds: _retryIntervalSeconds), (timer) {
         _fetchData(event.url);
