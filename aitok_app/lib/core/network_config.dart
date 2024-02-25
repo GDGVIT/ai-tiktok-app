@@ -24,6 +24,8 @@ class NetworkConfig {
   Future<Response> getRequest(String endPoint) async {
     Response response;
 
+    debugPrint(endPoint);
+
     try {
       response = await _dio.get(endPoint);
     } on DioException catch (e) {
@@ -40,13 +42,9 @@ class NetworkConfig {
     Response response;
 
     try {
-      debugPrint("before");
       response = await _dio.post(endPoint, data: body);
-      debugPrint("after");
       debugPrint(response.data.toString());
     } catch (e) {
-      debugPrint("error");
-      debugPrint(e.toString());
       throw Exception(e);
     }
 
