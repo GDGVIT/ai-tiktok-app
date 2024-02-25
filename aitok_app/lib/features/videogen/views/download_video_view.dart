@@ -1,5 +1,6 @@
 import 'dart:io'; // Import the dart:io package
 
+import 'package:aitok/features/home/views/homepage_view.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -122,7 +123,8 @@ class _DownloadVideoViewState extends State<DownloadVideoView> {
           style: TextStyle(color: Colors.white),
         ),
         leading: IconButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () =>
+              Navigator.pushReplacementNamed(context, MyHomePage.routeName),
           icon: const Icon(
             Icons.arrow_back_ios,
             color: Colors.white,
