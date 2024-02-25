@@ -18,14 +18,13 @@ class DownloadVideoView extends StatefulWidget {
   State<DownloadVideoView> createState() => _DownloadVideoViewState();
 }
 
-String? videoUrl =
-    "https://reelgen-wandering-resonance-2223.fly.dev/092874a/video/video.mp4";
+String? videoUrl;
 Dio _dio = Dio();
 
 Future<void> _downloadVideo(String url, BuildContext context) async {
   try {
     final Directory appDocDir = await getApplicationDocumentsDirectory();
-    final String filePath = '${appDocDir.path}/video.mp4';
+    final String filePath = '${appDocDir.path}/${DateTime.now()}_video.mp4';
 
     // Show download dialog
     showDialog(
@@ -57,7 +56,11 @@ Future<void> _downloadVideo(String url, BuildContext context) async {
     // after the download is complete.
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Video downloaded successfully!'),
+        backgroundColor: Colors.greenAccent,
+        content: Text(
+          'Video downloaded successfully!',
+          style: TextStyle(color: Colors.black),
+        ),
       ),
     );
   } catch (e) {
@@ -77,13 +80,9 @@ Future<void> _downloadVideo(String url, BuildContext context) async {
 }
 
 Future<void> download(BuildContext context) async {
-  debugPrint("download");
   await Permission.storage.request();
   if (await Permission.storage.status.isGranted) {
     await _downloadVideo(videoUrl!, context);
-    // await _downloadVideo(
-    //     "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
-    //     context);
   } else {
     print('Storage permission denied');
   }
