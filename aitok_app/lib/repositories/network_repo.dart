@@ -15,13 +15,16 @@ class NetworkRepo implements NetworkRepoInterface {
     debugPrint("Trying");
     try {
       final response = await networkProvider.postRequest("/text", body);
-      debugPrint(response.data);
+      // debugPrint("===========> Check");
+      // debugPrint(response.data.toString());
+      // debugPrint(response.statusCode.toString());
       if (response.statusCode == 200) {
         return TextResponseModel.fromJson(response.data);
       } else {
         throw Exception("Failed to get text");
       }
     } catch (e) {
+      debugPrint(e.toString());
       throw Exception("Something went wrong!");
     }
   }
