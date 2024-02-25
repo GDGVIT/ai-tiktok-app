@@ -2,6 +2,7 @@ import 'package:aitok/models/response_model.dart';
 import 'package:aitok/repositories/network_repo_interface.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../../../core/service_locator.dart';
 
@@ -20,6 +21,7 @@ class VideoGeneratorBloc
         final response = await remoteRepo.getTextResponse(event.text);
         emit(TextResponseLoaded(response));
       } catch (e) {
+        debugPrint(e.toString());
         emit(const VideoGeneratorError(mgs: "Something went wrong!"));
         emit(VideoGeneratorInitial());
       }

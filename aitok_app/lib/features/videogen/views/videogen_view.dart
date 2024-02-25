@@ -83,64 +83,72 @@ class _VideoGenViewState extends State<VideoGenView> {
           ),
           body: SafeArea(
             child: Center(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: TextField(
-                      controller: scriptController,
-                      autofocus: true,
-                      decoration: InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: const BorderSide(
-                            color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: scriptController,
+                        autofocus: true,
+                        decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: const BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: const BorderSide(
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                      maxLines: 20,
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  InkWell(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width - 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: Center(
-                        child: Text(
-                          "Generate Video",
-                          style: Theme.of(context).textTheme.bodyLarge,
+                        maxLines: 30,
+                        style: const TextStyle(
+                          color: Colors.white,
                         ),
                       ),
                     ),
-                    onTap: () {
-                      if (state is VideoGeneratorInitial) {
-                        BlocProvider.of<VideoGeneratorBloc>(context).add(
-                          GetTextEvent(scriptController.text),
-                        );
-                      } else if (state is TextResponseLoaded) {
-                        BlocProvider.of<VideoGeneratorBloc>(context).add(
-                          GetVideoEvent(
-                            text: state.response.text,
-                            userId: state.response.userId,
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    InkWell(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width - 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Generate Video",
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
-                        );
-                      }
-                    },
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                ],
+                        ),
+                      ),
+                      onTap: () {
+                        if (state is VideoGeneratorInitial) {
+                          BlocProvider.of<VideoGeneratorBloc>(context).add(
+                            GetTextEvent(scriptController.text),
+                          );
+                        } else if (state is TextResponseLoaded) {
+                          BlocProvider.of<VideoGeneratorBloc>(context).add(
+                            GetVideoEvent(
+                              text: state.response.text,
+                              userId: state.response.userId,
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

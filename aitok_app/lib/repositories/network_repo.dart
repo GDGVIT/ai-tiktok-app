@@ -1,5 +1,6 @@
 import 'package:aitok/core/network_config.dart';
 import 'package:aitok/models/response_model.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'network_repo_interface.dart';
 
@@ -11,8 +12,10 @@ class NetworkRepo implements NetworkRepoInterface {
   @override
   Future<TextResponseModel> getTextResponse(String text) async {
     final body = {"text": text};
+    debugPrint("Trying");
     try {
       final response = await networkProvider.postRequest("/text", body);
+      debugPrint(response.data);
       if (response.statusCode == 200) {
         return TextResponseModel.fromJson(response.data);
       } else {
